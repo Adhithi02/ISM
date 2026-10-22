@@ -1,0 +1,23 @@
+{
+  "budget_demo": {
+    "selected": 10,
+    "rejected": 9,
+    "total_benefit": 801.3171
+  },
+  "drift_test": {
+    "workload": "changing_hot_set",
+    "n_epochs": 96,
+    "static_mean_fmr": 0.0,
+    "online_mean_fmr": 0.024,
+    "static_violations": 0,
+    "online_violations": 4,
+    "tracker_summary": {
+      "current_delta": -0.5,
+      "n_updates": 96,
+      "mean_delta": -0.4648,
+      "std_delta": 0.1093,
+      "mean_fmr": 0.024,
+      "fmr_violations": 4
+    }
+  }
+}

@@ -1,0 +1,58 @@
+{
+  "workload_type": "bursty",
+  "n_raw_events": 245395,
+  "n_windows": 2500,
+  "n_extents": 500,
+  "horizon_h": 5,
+  "n_decision_rows": 248365,
+  "splits": {
+    "n_windows": 2500,
+    "horizon_h": 5,
+    "boundaries": {
+      "train": [
+        0,
+        1000
+      ],
+      "cal_a": [
+        1005,
+        1255
+      ],
+      "cal_b": [
+        1260,
+        2010
+      ],
+      "test": [
+        2015,
+        2500
+      ]
+    },
+    "rows": {
+      "train": 98865,
+      "cal_a": 25000,
+      "cal_b": 75000,
+      "test": 48000
+    },
+    "purge_gap_windows": 5
+  },
+  "features": {
+    "raw_count": 16,
+    "columns": [
+      "count_lag1",
+      "count_lag2",
+      "count_lag3",
+      "count_lag4",
+      "count_lag5",
+      "count_lag6",
+      "count_lag7",
+      "count_lag8",
+      "ewma_5",
+      "ewma_10",
+      "burstiness_8",
+      "read_ratio",
+      "mean_size_kb",
+      "neighbour_prev_count",
+      "neighbour_next_count",
+      "volume_load"
+    ]
+  }
+}

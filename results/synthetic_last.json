@@ -1,0 +1,1 @@
+{"seed": 46, "workload": "noisy_bursty", "rows": 228839, "windows": 2500, "extents": 500, "train_rows": 98911, "cal_b_rows": 75000, "test_rows": 48000, "models": 10}

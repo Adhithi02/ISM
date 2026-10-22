@@ -1,0 +1,36 @@
+{
+  "attempt": 1,
+  "base_total_rate": 800.0,
+  "spike_rate": 0.8,
+  "tau": 32.8506329113924,
+  "tau_stats": {
+    "raw_median_tau": 32.85,
+    "rescale_factor": 1.0,
+    "final_median_tau": 32.85,
+    "p10": 32.85,
+    "p90": 32.85
+  },
+  "prevalence": 0.05816092893940633,
+  "policies": {
+    "hindsight_oracle": {
+      "migrations": 385,
+      "activity": 0.3571
+    },
+    "point_forecast": {
+      "migrations": 715,
+      "activity": 0.4694
+    },
+    "static_threshold": {
+      "migrations": 1390,
+      "activity": 0.9592
+    },
+    "lru_promote": {
+      "migrations": 16211,
+      "activity": 1.0
+    },
+    "proposed": {
+      "migrations": 371,
+      "activity": 0.3469
+    }
+  }
+}

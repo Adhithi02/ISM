@@ -1,0 +1,132 @@
+# ============================================================
+# Uncertainty-Aware Predictive Data Migration — Master Config
+# All experiments reproducible from this file + one command.
+# ============================================================
+
+seed: 42
+n_seeds: 10
+
+data:
+  extent_size_bytes: 16777216   # 16 MiB
+  window_sec: 60
+  horizon_h: 5                 # decision epochs every h windows
+
+  msrc:
+    volumes: ["hm_0", "prn_0", "proj_0"]
+    cache_dir: "data/msrc_parquet"
+    raw_dir: "data/msrc_raw"
+    time_scale: 1.0            # replay speed multiplier
+
+  synthetic:
+    n_extents: 500
+    n_windows: 2500            # >= 2000 per seed
+    zipf_alpha: 1.15
+    diurnal_amplitude: 0.3
+    diurnal_period_windows: 1440  # 24 h at 60 s windows
+    base_total_rate: 800.0     # Zipf head extents get tens of accesses per window
+    read_ratio: 0.7
+    mean_request_size_bytes: 65536  # 64 KiB
+    noisy_dispersion: 2.0
+    noisy_event_window_range: [100, 180]
+
+    spikes_per_extent:
+      bursty_rate: 0.18        # avg spikes per extent across 2500 windows
+      steady_rate: 0.0         # steady workload = no spikes
+      default_rate: 0.15
+      noisy_bursty_rate: 0.80
+      amplitude_range: [80.0, 200.0]
+      duration_range: [3, 10]  # windows
+      precursor_ramp_windows: 4
+      precursor_fraction: 0.6  # 60% precursor-driven, 40% silent
+      noisy_precursor_fraction: 0.3
+      noisy_silent_fraction: 0.4
+
+    decoys_per_extent:
+      bursty_rate: 0.08
+      steady_rate: 0.04        # decoys at low rate for steady
+      default_rate: 0.08
+      noisy_bursty_rate: 0.96
+      peak_amplitude_range: [3.0, 7.0]
+      ramp_windows: 4
+      fade_windows: 4
+
+    drift:
+      onset_window: 1000
+      hot_set_fraction: 0.4
+
+    workload_types: ["steady", "bursty", "read_heavy", "changing_hot_set"]
+
+splits:
+  train: 0.40
+  cal_a: 0.10
+  cal_b: 0.30
+  test: 0.20
+  purge_gap_h: true            # purge gap = h windows between partitions
+
+simulator:
+  hdd:
+    capacity: 1
+    mean_service_ms: 8.0       # adjusted per trace for target rho
+  ssd:
+    capacity: 4
+    mean_service_ms: 0.1
+  migration:
+    kappa: 1.0                 # interference factor
+  target_utilisation: [0.60, 0.80]
+  max_requests: 100000         # cap per capped run
+  busy_slice_minutes: 45       # max wall-clock per capped sim run
+
+cost_model:
+  nominal_tau: 5.0
+  dirty_fraction: 0.3
+  extent_size_mib: 16.0
+  kappa_interference: 1.0
+  measured_utilization: 0.7
+  ssd_wear_cost_per_mib: 0.05
+
+eviction:
+  default_policy: "value"      # "value" or "lru"
+
+budget:
+  ssd_fraction: 0.20
+  max_migrations_per_epoch: 200
+
+models:
+  # All quantile levels to train (includes gate grid + interval bounds)
+  quantile_levels: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50, 0.90]
+  # Quantile levels used in the LTT gate grid
+  gate_quantile_levels: [0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.35, 0.40, 0.50]
+  xgboost:
+    max_depth: 6
+    n_estimators: 300
+    learning_rate: 0.05
+    n_jobs: 2
+
+calibration:
+  alpha_fmr: 0.10             # target false-migration rate
+  alpha_cov: 0.10             # target miscoverage for CQR
+  delta_ltt: 0.10             # confidence level for LTT p-values (never = alpha_fmr)
+  delta_range: [-0.8, 3.0]
+  delta_steps: 39
+  n_extent_shards: 8          # for pooling calibration units
+  n_cal_only_seeds: 20
+  p_star_grid_step: 0.05
+
+online_tracker:
+  eta: 0.5                    # dimensionless, no 1/median(tau) scaling
+  delta_min: -0.5
+  delta_max: 2.0
+  # starts at the certified delta from LTT
+
+defer:
+  p_defer: 0.3
+  max_defer_epochs: 3
+
+experiment:
+  alpha_sweep: [0.05, 0.10, 0.20, 0.30]
+  ssd_sweep: [0.05, 0.10, 0.20]
+  cost_sweep: [0.5, 1.0, 2.0]
+  n_bootstrap: 10000
+  n_wilcoxon_min: 10           # minimum paired units
+
+results_dir: "results"

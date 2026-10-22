@@ -1,0 +1,39 @@
+{
+  "cqr": {
+    "Q_offset": 0.0,
+    "alpha_cov": 0.1,
+    "cal_coverage": 0.98588,
+    "test_coverage": 0.9847
+  },
+  "ltt": {
+    "certifiability": "n_cal_epochs = 150, n_cal_units (epoch x shard) = 1200, K = 9, min certifiable alpha_FMR (Hoeffding) = 0.0433, min certifiable alpha_FMR (Bentkus) = 0.0479",
+    "n_cal_epochs": 150,
+    "n_cal_units": 1200,
+    "K": 9,
+    "min_certifiable_alpha": 0.043300354455488514,
+    "certified_cells": 212,
+    "total_cells": 234,
+    "best_cell": {
+      "q": 0.5,
+      "delta": 0.1,
+      "mean_fdp": 0.0667,
+      "certified": true,
+      "net_benefit": 1169711.05
+    }
+  },
+  "defer": {
+    "migrate": 106,
+    "defer": 56,
+    "reject": 1338,
+    "total": 1500,
+    "currently_deferred": 18
+  },
+  "online_tracker": {
+    "current_delta": -0.5,
+    "n_updates": 1200,
+    "mean_delta": -0.4153,
+    "std_delta": 0.1107,
+    "mean_fmr": 0.0667,
+    "fmr_violations": 328
+  }
+}

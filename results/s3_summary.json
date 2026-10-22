@@ -1,0 +1,103 @@
+{
+  "tau_stats": {
+    "raw_median_tau": 1.4,
+    "rescale_factor": 4.515,
+    "final_median_tau": 5.0,
+    "p10": 1.33,
+    "p90": 2.09
+  },
+  "ssd_capacity": 50,
+  "max_migrations_per_epoch": 10,
+  "baselines": [
+    {
+      "policy": "hdd_only",
+      "eviction": "None",
+      "total_migrations": 0,
+      "migration_activity": 0.0,
+      "mean_fdp": 0.0,
+      "pooled_fmr": 0.0,
+      "total_net_benefit_ms": 0.0
+    },
+    {
+      "policy": "all_ssd",
+      "eviction": "None",
+      "total_migrations": 0,
+      "migration_activity": 0.0,
+      "mean_fdp": 0.0,
+      "pooled_fmr": 0.0,
+      "total_net_benefit_ms": 0.0
+    },
+    {
+      "policy": "lru_promote",
+      "eviction": "LRU",
+      "total_migrations": 4980,
+      "migration_activity": 1.0,
+      "mean_fdp": 0.6705,
+      "pooled_fmr": 0.6705,
+      "total_net_benefit_ms": -130412.14
+    },
+    {
+      "policy": "static_threshold",
+      "eviction": "LRU",
+      "total_migrations": 161,
+      "migration_activity": 0.2651,
+      "mean_fdp": 0.0482,
+      "pooled_fmr": 0.1739,
+      "total_net_benefit_ms": 44040.17
+    },
+    {
+      "policy": "point_forecast",
+      "eviction": "LRU",
+      "total_migrations": 113,
+      "migration_activity": 0.1888,
+      "mean_fdp": 0.0281,
+      "pooled_fmr": 0.1327,
+      "total_net_benefit_ms": 44868.16
+    },
+    {
+      "policy": "point_forecast_value_evict",
+      "eviction": "Value",
+      "total_migrations": 113,
+      "migration_activity": 0.1888,
+      "mean_fdp": 0.0301,
+      "pooled_fmr": 0.1416,
+      "total_net_benefit_ms": 44488.96
+    },
+    {
+      "policy": "safety_buffer",
+      "eviction": "LRU",
+      "total_migrations": 98,
+      "migration_activity": 0.1627,
+      "mean_fdp": 0.0191,
+      "pooled_fmr": 0.102,
+      "total_net_benefit_ms": 40847.08
+    },
+    {
+      "policy": "proposed_lru_evict",
+      "eviction": "LRU",
+      "total_migrations": 151,
+      "migration_activity": 0.247,
+      "mean_fdp": 0.0422,
+      "pooled_fmr": 0.1589,
+      "total_net_benefit_ms": 43079.02
+    },
+    {
+      "policy": "proposed",
+      "eviction": "Value",
+      "total_migrations": 152,
+      "migration_activity": 0.251,
+      "mean_fdp": 0.0402,
+      "pooled_fmr": 0.1447,
+      "total_net_benefit_ms": 43356.04
+    },
+    {
+      "policy": "hindsight_oracle",
+      "eviction": "Value",
+      "total_migrations": 2094,
+      "migration_activity": 0.9317,
+      "mean_fdp": 0.6202,
+      "pooled_fmr": 0.6996,
+      "total_net_benefit_ms": -5828.34
+    }
+  ]
+}

@@ -1,0 +1,100 @@
+{
+  "quantile_levels": [
+    0.05,
+    0.1,
+    0.15,
+    0.2,
+    0.25,
+    0.3,
+    0.35,
+    0.4,
+    0.5,
+    0.9
+  ],
+  "n_models": 10,
+  "crossing_rate": 0.0266,
+  "eval_table": [
+    {
+      "quantile": 0.05,
+      "pinball_loss": 0.1011,
+      "mae": 1.9931,
+      "coverage_below": 0.5262
+    },
+    {
+      "quantile": 0.1,
+      "pinball_loss": 0.1426,
+      "mae": 1.3619,
+      "coverage_below": 0.5302
+    },
+    {
+      "quantile": 0.15,
+      "pinball_loss": 0.1902,
+      "mae": 1.1541,
+      "coverage_below": 0.5363
+    },
+    {
+      "quantile": 0.2,
+      "pinball_loss": 0.2423,
+      "mae": 1.0835,
+      "coverage_below": 0.5427
+    },
+    {
+      "quantile": 0.25,
+      "pinball_loss": 0.2903,
+      "mae": 1.0362,
+      "coverage_below": 0.5495
+    },
+    {
+      "quantile": 0.3,
+      "pinball_loss": 0.3334,
+      "mae": 0.9993,
+      "coverage_below": 0.5571
+    },
+    {
+      "quantile": 0.35,
+      "pinball_loss": 0.3711,
+      "mae": 0.9687,
+      "coverage_below": 0.5643
+    },
+    {
+      "quantile": 0.4,
+      "pinball_loss": 0.4049,
+      "mae": 0.9429,
+      "coverage_below": 0.5749
+    },
+    {
+      "quantile": 0.5,
+      "pinball_loss": 0.4609,
+      "mae": 0.9217,
+      "coverage_below": 0.6026
+    },
+    {
+      "quantile": 0.9,
+      "pinball_loss": 0.2785,
+      "mae": 1.8521,
+      "coverage_below": 0.9077
+    }
+  ],
+  "interval_metrics": {
+    "interval": "[q0.10, q0.90]",
+    "coverage": 0.8924,
+    "nominal_coverage": 0.8,
+    "mean_width": 2.9649,
+    "median_width": 1.7616
+  },
+  "prob_model": {
+    "tau_threshold": 5.0,
+    "cal_metrics": {
+      "brier": 0.0185,
+      "ece": 0.0001
+    },
+    "brier_test": 0.0221,
+    "prevalence_test": 0.0771
+  },
+  "split_sizes": {
+    "train": 98865,
+    "cal_a": 25000,
+    "cal_b": 75000,
+    "test": 48000
+  }
+}

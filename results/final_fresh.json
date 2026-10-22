@@ -1,0 +1,90 @@
+{
+  "regime": "noisy_bursty",
+  "seeds": [
+    42
+  ],
+  "rows": [
+    {
+      "seed": 42,
+      "alpha": 0.05,
+      "policy": "risk_controlled",
+      "mean_fmr": 0.0158,
+      "pooled_fmr": 0.0165,
+      "migration_activity": 1.0,
+      "total_migrations": 182,
+      "wasted_migrations": 3,
+      "net_benefit": 314239.76,
+      "n_epochs": 16,
+      "n_epochs_with_mig": 16,
+      "ltt_certified": true,
+      "q": 0.4,
+      "delta": 0.4
+    },
+    {
+      "seed": 42,
+      "alpha": 0.1,
+      "policy": "risk_controlled",
+      "mean_fmr": 0.0585,
+      "pooled_fmr": 0.0593,
+      "migration_activity": 1.0,
+      "total_migrations": 236,
+      "wasted_migrations": 14,
+      "net_benefit": 323775.58,
+      "n_epochs": 16,
+      "n_epochs_with_mig": 16,
+      "ltt_certified": true,
+      "q": 0.5,
+      "delta": 0.1
+    },
+    {
+      "seed": 42,
+      "alpha": 0.2,
+      "policy": "risk_controlled",
+      "mean_fmr": 0.0906,
+      "pooled_fmr": 0.0932,
+      "migration_activity": 1.0,
+      "total_migrations": 279,
+      "wasted_migrations": 26,
+      "net_benefit": 330746.72,
+      "n_epochs": 16,
+      "n_epochs_with_mig": 16,
+      "ltt_certified": true,
+      "q": 0.5,
+      "delta": -0.1
+    },
+    {
+      "seed": 42,
+      "alpha": 0.3,
+      "policy": "risk_controlled",
+      "mean_fmr": 0.145,
+      "pooled_fmr": 0.1465,
+      "migration_activity": 1.0,
+      "total_migrations": 314,
+      "wasted_migrations": 46,
+      "net_benefit": 330503.62,
+      "n_epochs": 16,
+      "n_epochs_with_mig": 16,
+      "ltt_certified": true,
+      "q": 0.5,
+      "delta": -0.2
+    },
+    {
+      "seed": 42,
+      "alpha": null,
+      "policy": "point_forecast",
+      "mean_fmr": 0.0724,
+      "pooled_fmr": 0.0757,
+      "migration_activity": 1.0,
+      "total_migrations": 251,
+      "wasted_migrations": 19,
+      "net_benefit": 326771.58,
+      "n_epochs": 16,
+      "n_epochs_with_mig": 16,
+      "ltt_certified": false,
+      "q": 0.5,
+      "delta": 0.0
+    }
+  ],
+  "status": "fresh_reduced_slice_full_strength_model_run",
+  "reduced": true
+}

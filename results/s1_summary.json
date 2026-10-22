@@ -1,0 +1,46 @@
+[
+  {
+    "workload": "steady",
+    "seed": 2844,
+    "n_rows": 179579,
+    "n_windows": 2500,
+    "n_active_extents": 500,
+    "mean_lambda": 210.6,
+    "n_spikes": 5,
+    "n_decoys": 3,
+    "has_drift": false
+  },
+  {
+    "workload": "bursty",
+    "seed": 639,
+    "n_rows": 180587,
+    "n_windows": 2500,
+    "n_active_extents": 500,
+    "mean_lambda": 213.3,
+    "n_spikes": 10,
+    "n_decoys": 3,
+    "has_drift": false
+  },
+  {
+    "workload": "read_heavy",
+    "seed": 2632,
+    "n_rows": 180566,
+    "n_windows": 2500,
+    "n_active_extents": 500,
+    "mean_lambda": 210.5,
+    "n_spikes": 5,
+    "n_decoys": 3,
+    "has_drift": false
+  },
+  {
+    "workload": "changing_hot_set",
+    "seed": 9412,
+    "n_rows": 180525,
+    "n_windows": 2500,
+    "n_active_extents": 500,
+    "mean_lambda": 211.2,
+    "n_spikes": 5,
+    "n_decoys": 3,
+    "has_drift": true
+  }
+]

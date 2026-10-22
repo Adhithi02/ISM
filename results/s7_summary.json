@@ -1,0 +1,67 @@
+{
+  "multi_seed": {
+    "n_seeds": 10,
+    "mean_fmr": 0.0736,
+    "std_fmr": 0.0052,
+    "mean_net_benefit": 562879.2,
+    "std_net_benefit": 3110.8,
+    "ltt_certified": 10,
+    "fmr_ci": {
+      "lower": 0.07043,
+      "upper": 0.07688
+    },
+    "nb_ci": {
+      "lower": 560936.228425,
+      "upper": 564750.223325
+    }
+  },
+  "alpha_sweep": {
+    "0.05": {
+      "net_benefit": 556553.5519999999,
+      "mean_fmr": 0.03848
+    },
+    "0.1": {
+      "net_benefit": 562559.642,
+      "mean_fmr": 0.07236000000000001
+    },
+    "0.2": {
+      "net_benefit": 565099.0299999999,
+      "mean_fmr": 0.1277
+    },
+    "0.3": {
+      "net_benefit": 565099.0299999999,
+      "mean_fmr": 0.1277
+    }
+  },
+  "success_targets": {
+    "T1": {
+      "status": "MET",
+      "target": "T1",
+      "criterion": "Mean FMR <= 0.1 in >= 90% of blocks",
+      "pass_fraction": 1.0,
+      "n_blocks": 10,
+      "n_pass": 10,
+      "met": true
+    },
+    "T2": {
+      "status": "NOT VERIFIED",
+      "reason": "Matched-volume latency comparison was not run by S7."
+    },
+    "T3": {
+      "status": "NOT MET",
+      "wasted_reduction": -0.0474,
+      "baseline_policy": "point_forecast"
+    },
+    "T4": {
+      "status": "NOT VERIFIED",
+      "reason": "Post-drift static-versus-online target was not evaluated in S7."
+    },
+    "T5": {
+      "status": "MET",
+      "all_active": true
+    }
+  },
+  "statistics": {
+    "wilcoxon_wasted_migrations": null
+  }
+}
