@@ -1,0 +1,156 @@
+{
+  "volumes": {
+    "hm_0": {
+      "volume": "hm_0",
+      "n_windows": 1500,
+      "n_extents": 574,
+      "tau_median": 21.265822784810126,
+      "rows": [
+        {
+          "policy": "conformal_quantile",
+          "migrations": 0,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.0,
+          "net_benefit": 0.0,
+          "recall": 0.0
+        },
+        {
+          "policy": "conformal_probability",
+          "migrations": 561,
+          "wasted": 156,
+          "mean_fdp": 0.1048,
+          "activity": 1.0,
+          "net_benefit": 256914.9,
+          "recall": 0.6853
+        },
+        {
+          "policy": "point_forecast",
+          "migrations": 111,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.3571,
+          "net_benefit": 91825.6,
+          "recall": "-"
+        },
+        {
+          "policy": "safety_buffer",
+          "migrations": 111,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.3571,
+          "net_benefit": 91825.6,
+          "recall": "-"
+        }
+      ]
+    },
+    "prn_0": {
+      "volume": "prn_0",
+      "n_windows": 1500,
+      "n_extents": 1168,
+      "tau_median": 21.265822784810126,
+      "rows": [
+        {
+          "policy": "conformal_quantile",
+          "migrations": 0,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.0,
+          "net_benefit": 0.0,
+          "recall": 0.0
+        },
+        {
+          "policy": "conformal_probability",
+          "migrations": 2091,
+          "wasted": 1300,
+          "mean_fdp": 0.1727,
+          "activity": 1.0,
+          "net_benefit": 319817.0,
+          "recall": 0.6845
+        },
+        {
+          "policy": "point_forecast",
+          "migrations": 181,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.75,
+          "net_benefit": 90074.9,
+          "recall": "-"
+        },
+        {
+          "policy": "safety_buffer",
+          "migrations": 181,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.75,
+          "net_benefit": 90074.9,
+          "recall": "-"
+        }
+      ]
+    },
+    "proj_0": {
+      "volume": "proj_0",
+      "n_windows": 1500,
+      "n_extents": 475,
+      "tau_median": 21.265822784810126,
+      "rows": [
+        {
+          "policy": "conformal_quantile",
+          "migrations": 0,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.0,
+          "net_benefit": 0.0,
+          "recall": 0.0
+        },
+        {
+          "policy": "conformal_probability",
+          "migrations": 1118,
+          "wasted": 578,
+          "mean_fdp": 0.1591,
+          "activity": 1.0,
+          "net_benefit": 144908.2,
+          "recall": 0.8341
+        },
+        {
+          "policy": "point_forecast",
+          "migrations": 63,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.2857,
+          "net_benefit": 58912.3,
+          "recall": "-"
+        },
+        {
+          "policy": "safety_buffer",
+          "migrations": 63,
+          "wasted": 0,
+          "mean_fdp": 0.0,
+          "activity": 0.2857,
+          "net_benefit": 58912.3,
+          "recall": "-"
+        }
+      ]
+    }
+  },
+  "cross_volume": [
+    {
+      "cal_volume": "hm_0",
+      "test_volume": "prn_0",
+      "mean_fdp": 0.0,
+      "migrations": 0,
+      "wasted": 0,
+      "net_benefit": 0.0,
+      "recall": 0.0
+    },
+    {
+      "cal_volume": "prn_0",
+      "test_volume": "hm_0",
+      "mean_fdp": 0.0,
+      "migrations": 0,
+      "wasted": 0,
+      "net_benefit": 0.0,
+      "recall": 0.0
+    }
+  ]
+}

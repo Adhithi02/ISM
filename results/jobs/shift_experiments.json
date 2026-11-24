@@ -1,0 +1,71 @@
+[
+  {
+    "cal_workload": "steady",
+    "test_workload": "bursty",
+    "variant": "static_conformal",
+    "mean_fdp": 0.0656,
+    "migrations": 363,
+    "wasted": 29,
+    "net_benefit": 1073874.7,
+    "recall": 0.1514,
+    "violation_rate": 0.2396
+  },
+  {
+    "cal_workload": "steady",
+    "test_workload": "bursty",
+    "variant": "recalibrated_conformal",
+    "mean_fdp": 0.0384,
+    "migrations": 184,
+    "wasted": 16,
+    "net_benefit": 557258.8,
+    "recall": 0.0714,
+    "violation_rate": 0.1458,
+    "control_restored": true
+  },
+  {
+    "cal_workload": "bursty",
+    "test_workload": "steady",
+    "variant": "static_conformal",
+    "mean_fdp": 0.0,
+    "migrations": 352,
+    "wasted": 0,
+    "net_benefit": 1044557.2,
+    "recall": 0.1637,
+    "violation_rate": 0.0
+  },
+  {
+    "cal_workload": "bursty",
+    "test_workload": "steady",
+    "variant": "recalibrated_conformal",
+    "mean_fdp": 0.0,
+    "migrations": 353,
+    "wasted": 0,
+    "net_benefit": 1046648.6,
+    "recall": 0.1644,
+    "violation_rate": 0.0,
+    "control_restored": true
+  },
+  {
+    "cal_workload": "bursty",
+    "test_workload": "changing_hot_set",
+    "variant": "static_conformal",
+    "mean_fdp": 0.0,
+    "migrations": 204,
+    "wasted": 0,
+    "net_benefit": 836260.6,
+    "recall": 0.0928,
+    "violation_rate": 0.0
+  },
+  {
+    "cal_workload": "bursty",
+    "test_workload": "changing_hot_set",
+    "variant": "recalibrated_conformal",
+    "mean_fdp": 0.0,
+    "migrations": 202,
+    "wasted": 0,
+    "net_benefit": 831880.3,
+    "recall": 0.0918,
+    "violation_rate": 0.0,
+    "control_restored": true
+  }
+]

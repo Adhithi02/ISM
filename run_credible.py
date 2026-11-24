@@ -365,7 +365,7 @@ def run_simpy_multi_server_eval(
         # Multi-server capacity:
         n_servers = max(1, int(np.round(lam_hdd * base_service_ms / target_rho_mid)))
         # Fine-tune service time to put rho strictly in [0.60, 0.80]
-        actual_service_ms = float(np.clip(target_rho_mid * n_servers / max(lam_hdd, 1e-9), 1.0, 25.0))
+        actual_service_ms = float(np.clip(target_rho_mid * n_servers / max(lam_hdd, 1e-9), 1.0, 250.0))
 
         sim = StorageSim(SimConfig(
             hdd_capacity=n_servers,
