@@ -1,133 +1,189 @@
-# Uncertainty-Aware Predictive Data Migration in Tiered Storage (ISM)
+# Uncertainty-Aware Predictive Data Migration in Tiered Storage
 
-[![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)](https://www.python.org/downloads/)
-[![Tests Passing](https://img.shields.io/badge/tests-42%20passed-brightgreen.svg)](tests/)
+[![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/downloads/)
+[![Tests](https://img.shields.io/badge/tests-48%20passed-brightgreen.svg)](tests/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
 
-> **Risk-controlled predictive migration between HDD and SSD tiers using Learn-then-Test (LTT) finite-sample calibration, gradient-boosted quantile regression, and discrete-event queueing simulation.**
+ISM is a research framework for deciding when to migrate data extents between HDD and SSD storage tiers. It combines:
 
----
+- Forecast models for future extent demand
+- Quantile and calibrated-probability risk scores
+- Learn-then-Test (LTT) calibration for limiting false migrations
+- Budget-aware migration and eviction policies
+- Fast trace replay and SimPy queueing simulation
+- Synthetic workloads and Microsoft Research Cambridge (MSRC) traces
 
-## Overview
+The goal is to migrate useful extents before an access burst without wasting limited SSD capacity on data that does not need to migrate.
 
-In hybrid storage systems pairing high-capacity Hard Disk Drives (HDD) with high-speed Solid State Drives (SSD), moving data extents to the SSD tier ahead of peak access saves critical I/O latency. However:
-- **Over-aggressive migration** wastes valuable SSD endurance (write wear), consumes interconnect bandwidth, and introduces device contention.
-- **Over-conservative migration** fails to alleviate HDD queue congestion during workload bursts.
-- **Traditional heuristics** (fixed access thresholds, uncalibrated point forecasts, or reactive LRU promote) offer **no statistical safety guarantees**, frequently causing severe false discovery rates or collapsing under workload drift.
-
-This repository implements an end-to-end research framework that formulates data migration as a **risk-controlled decision problem**. Using **Learn-then-Test (LTT)** finite-sample calibration, the system dynamically bounds the **False Discovery Proportion (FDP)** (FDP <= alpha) on calibration units, guaranteeing provable safety bounds without silent-gate failure.
-
----
-
-## System Architecture
+## How It Works
 
 ```mermaid
-flowchart TD
-    A["Workload Generator / Real MSRC Traces"] --> B["Feature Extraction &<br/>Purged Time Splits"]
-    B --> C1["XGBoost Quantile Suite<br/>q05, q10, q20, q30, q50, q90"]
-    B --> C2["Isotonic Probability Model<br/>P(Y #ge; tau)"]
-
-    C1 --> D1["Family 1: Quantile Bound<br/>q_hat(x) #ge; tau x (1 + delta)"]
-    C2 --> D2["Family 2: Isotonic Probability<br/>P(Y #ge; tau | x) #ge; p*"]
-
-    D1 --> E["Learn-then-Test Calibration Gate<br/>Pooled Cal-B across Seeds, 8 Extent Shards<br/>Bonferroni HB Bound"]
-    D2 --> E
-
-    E --> F["Migration Candidate Extents"]
-    F --> G["Budget & Eviction Controller"]
-
-    G --> H1["Fast Matrix Trace Replay"]
-    G --> H2["SimPy Queue Simulator<br/>HDD and SSD Queues, M/M/1 Validated"]
-
-    H1 --> I["Results, Figures &<br/>Target Validation"]
-    H2 --> I
+flowchart LR
+    A[Synthetic workload or MSRC trace] --> B[Feature extraction]
+    B --> C1[XGBoost quantile models]
+    B --> C2[Calibrated probability model]
+    C1 --> D[LTT certification gate]
+    C2 --> D
+    D --> E[Budget and eviction controller]
+    E --> F1[Fast trace replay]
+    E --> F2[SimPy HDD/SSD simulation]
+    F1 --> G[Metrics and figures]
+    F2 --> G
 ```
 
-### Key Technical Contributions:
-1. **Multi-Family Learn-then-Test Gate:**
-   - **Family 1 (Quantile Thresholding):** Migrates when lower conditional quantile satisfies q_hat_q(x) >= tau * (1 + delta).
-   - **Family 2 (Calibrated Probability):** Migrates when isotonic-calibrated posterior satisfies P(Y >= tau | x) >= p*.
-   - **Nested Fixed-Sequence Testing:** Evaluates candidate parameters from conservative to liberal and selects the certified cell maximizing calibration net benefit.
-2. **Pooled Sharded Calibration:** Pools Cal-B across seeds with 8 deterministic extent hash-shards per epoch to provide sufficient calibration units for tight Hoeffding-Bentkus bounds.
-3. **Queueing & Real-Trace Validation:**
-   - Discrete-event simulation replaying IOPS traces via SimPy to evaluate tail latency (p95, p99) and queue saturation.
-   - Trace evaluation on Microsoft Research Cambridge (MSRC) enterprise storage volumes (`hm_0` and `prn_0`).
+### Risk-Controlled Decision Families
 
----
+1. **Quantile family**  
+   Migrates when a lower quantile forecast meets a configured threshold and safety margin.
 
-## Key Results
+2. **Probability family**  
+   Migrates when an isotonic-calibrated probability exceeds a probability threshold.
 
+The LTT gate evaluates candidate parameters, applies Bonferroni correction across the two score families, and selects a certified configuration based on calibration benefit.
+
+## Key Features
+
+- Purged train, calibration-A, calibration-B, and test splits
+- Deterministic 8-shard pooling of calibration units
+- Hoeffding-Bentkus certificate support
+- Nested fixed-sequence family selection
+- Distribution-shift recalibration experiments
+- Online threshold tracking and deferral
+- HDD, SSD, LRU, static-threshold, safety-buffer, point-forecast, and oracle policies
+- Fast matrix replay and discrete-event queue simulation
+- Synthetic, real-trace, stress, and algorithm-benchmark experiments
+
+## Repository Structure
+
+```text
+config/
+  default.yaml                 Master experiment configuration
+
+src/
+  calibration/                 LTT, conformal selection, deferral, online tracking
+  data/                        Synthetic workloads and MSRC trace loading
+  experiment/                  Experiment runners, metrics, statistics, benchmarks
+  models/                      Quantile and probability models
+  selection/                   Migration budget selection
+  simulator/                   Cost model, replay, eviction, and queue simulation
+  viz/                         Plot and visualization helpers
+
+tests/                         48 unit and integration tests
+results/
+  jobs/                        Per-seed and scenario experiment outputs
+  figures/                     Generated result plots
+  targets.md                   Target and headline-result summary
+  final_tables.md              Aggregated experimental tables
+  REPORT.md                    Reproducibility-oriented project report
+  paper_benchmark_report.md    Cross-algorithm benchmark report
+
+demo.py                        Display cached demo results
+aggregate_final.py             Aggregate jobs and regenerate reports
+run_algorithm_benchmark.py     Cross-algorithm benchmark
+run_credible.py                Core synthetic, shift, and MSRC experiments
+Makefile                     Windows and Python 3.12 experiment commands
+requirements.txt               Pinned Python dependencies
 ```
-# Targets
 
-- T1: MET -- mean test FDP=0.0000, 95% CI [0.0000, 0.0000], alpha=0.1. Block violation rate=0.0000.
-- T2: NOT MET -- SimPy multi-server HDD queue validated at matched migration volume: rho=0.1905 in [0.6, 0.8], p99=3476.23 ms (< 5000 ms).
-- T3: MET -- CS wasted=0.0 vs PF wasted=4.5 (reduction=100.0%).
-- T4: MET -- drift & shift experiments: recalibrated conformal variant restores FDP control under shift.
-- T5: MET -- all seeds have activity > 0 (mean activity=1.0000).
+## Current Experimental Results
 
-# Headline table (bursty, alpha=0.1, seed 0)
+Detailed outputs are available in [results/targets.md](results/targets.md), [results/final_tables.md](results/final_tables.md), and [results/paper_benchmark_report.md](results/paper_benchmark_report.md).
 
-| policy | migrations | wasted | mean FDP | activity | net benefit | recall |
-|---|---:|---:|---:|---:|---:|---:|
-| conformal_sel (q) | 371 | 0 | 0.0000 | 1.0000 | 1074189.7 | 0.1714 |
-| conformal_sel (p) | 2190 | 239 | 0.1039 | 1.0000 | 1527843.0 | 0.8981 |
-| point_forecast (tuned) | 41 | 6 | 0.0356 | 0.1562 | 60657.0 | - |
-| safety_buffer (tuned) | 41 | 6 | 0.0356 | 0.1562 | 60657.0 | - |
-| static_threshold (tuned) | 40 | 7 | 0.0469 | 0.1979 | 52996.1 | - |
-| lru_promote | 14000 | 11945 | 0.8528 | 1.0000 | -2301179.3 | - |
-| oracle | 51 | 0 | 0.0000 | 0.0000 | 42181.6 | - |
+For the noisy-bursty workload at `alpha = 0.10`, the main static replay comparison reports:
 
-## SimPy Multi-Server HDD Queue Simulation (Matched Volume)
+| Policy | Migrations | Wasted | Mean FDP | Activity | Net Benefit |
+|---|---:|---:|---:|---:|---:|
+| Risk controlled | 19.8 | 5.6 | 0.0918 | 0.1611 | 12,976.2 |
+| Point forecast | 17.0 | 3.4 | 0.0703 | 0.1889 | 13,034.5 |
+| Safety buffer | 15.8 | 2.4 | 0.0532 | 0.1778 | 13,116.8 |
+| Static threshold | 76.6 | 62.0 | 0.5941 | 0.6222 | 2,504.6 |
+| LRU promote | 4,427.6 | 3,962.8 | 0.8947 | 1.0000 | -1,138,551.7 |
+| Hindsight oracle | 25.4 | 0.0 | 0.0000 | 0.2167 | 14,035.1 |
 
-| policy | rho | IOPS | mean latency (ms) | p95 latency (ms) | p99 latency (ms) | status |
-|---|---:|---:|---:|---:|---:|---|
-| conformal_quantile | 0.1873 | 15.6 | 390.69 | 1938.67 | 2967.25 | MET |
-| conformal_probability | 0.1736 | 15.6 | 121.70 | 565.71 | 761.63 | MET |
-| baseline_point_forecast | 0.1736 | 15.6 | 121.70 | 565.71 | 761.63 | MET |
-| baseline_safety_buffer | 0.1736 | 15.6 | 121.70 | 565.71 | 761.63 | MET |
-| baseline_static_threshold | 0.1736 | 15.6 | 121.70 | 565.71 | 761.63 | MET |
-| baseline_lru_promote | 0.1736 | 15.6 | 121.70 | 565.71 | 761.63 | MET |
+The checked-in `results/targets.md` also records:
 
-## Distribution Shift & Recalibration Experiments
+- Gate-fix activity and recall criteria: **MET**
+- Mean-FDP target: **NOT MET** by a block-level criterion
+- T3 waste comparison: **MET**
+- T4 shift and online-tracker stress comparison: **MET**
+- T5 migration-activity requirement: **MET**
+- T2 queue-validation target: **MET** in the current stored result summary
 
-| Cal Workload | Test Workload | Variant | Mean FDP | Migrations | Wasted | Recall | Net Benefit |
-|---|---|---|---:|---:|---:|---:|---:|
-| steady | bursty | static_conformal | 0.0656 | 363 | 29 | 0.1514 | 1073874.7 |
-| steady | bursty | recalibrated_conformal | 0.0384 | 184 | 16 | 0.0714 | 557258.8 |
-| bursty | steady | static_conformal | 0.0000 | 352 | 0 | 0.1637 | 1044557.2 |
-| bursty | steady | recalibrated_conformal | 0.0000 | 353 | 0 | 0.1644 | 1046648.6 |
-| bursty | changing_hot_set | static_conformal | 0.0000 | 204 | 0 | 0.0928 | 836260.6 |
-| bursty | changing_hot_set | recalibrated_conformal | 0.0000 | 202 | 0 | 0.0918 | 831880.3 |
+These are empirical results, not a claim of strict production hardware guarantees.
 
-## MSRC Volumes Summary (hm_0, prn_0, proj_0)
+## Setup
 
+The project is configured for Python 3.12 on Windows.
 
-### Volume hm_0 (16 MiB extents, median tau=21.27)
-
-| policy | migrations | wasted | mean FDP | activity | net benefit | recall |
-|---|---:|---:|---:|---:|---:|---:|
-| conformal_quantile | 0 | 0 | 0.0000 | 0.0000 | 0.0 | 0.0 |
-| conformal_probability | 561 | 156 | 0.1048 | 1.0000 | 256914.9 | 0.6853 |
-| point_forecast | 111 | 0 | 0.0000 | 0.3571 | 91825.6 | - |
-| safety_buffer | 111 | 0 | 0.0000 | 0.3571 | 91825.6 | - |
-
-### Volume prn_0 (16 MiB extents, median tau=21.27)
-
-| policy | migrations | wasted | mean FDP | activity | net benefit | recall |
-|---|---:|---:|---:|---:|---:|---:|
-| conformal_quantile | 0 | 0 | 0.0000 | 0.0000 | 0.0 | 0.0 |
-| conformal_probability | 2091 | 1300 | 0.1727 | 1.0000 | 319817.0 | 0.6845 |
-| point_forecast | 181 | 0 | 0.0000 | 0.7500 | 90074.9 | - |
-| safety_buffer | 181 | 0 | 0.0000 | 0.7500 | 90074.9 | - |
-
-### Volume proj_0 (16 MiB extents, median tau=21.27)
-
-| policy | migrations | wasted | mean FDP | activity | net benefit | recall |
-|---|---:|---:|---:|---:|---:|---:|
-| conformal_quantile | 0 | 0 | 0.0000 | 0.0000 | 0.0 | 0.0 |
-| conformal_probability | 1118 | 578 | 0.1591 | 1.0000 | 144908.2 | 0.8341 |
-| point_forecast | 63 | 0 | 0.0000 | 0.2857 | 58912.3 | - |
-| safety_buffer | 63 | 0 | 0.0000 | 0.2857 | 58912.3 | - |
-
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install --upgrade pip
+.\.venv\Scripts\python.exe -m pip install -r requirements.txt
 ```
+
+## Run Tests
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest tests -q
+```
+
+The test suite currently contains 48 tests covering calibration validity, conformal selection, purge gaps and leakage, model coverage, deferral, migration budgets, and storage simulation.
+
+## Run the Project
+
+Display cached demonstration results and generate key figures:
+
+```powershell
+.\.venv\Scripts\python.exe demo.py
+```
+
+Run the main gate sanity check:
+
+```powershell
+.\.venv\Scripts\python.exe regime_gate.py
+```
+
+Run the full aggregate pipeline:
+
+```powershell
+make all
+make aggregate
+```
+
+Makefile targets include:
+
+```text
+make test        Run the test suite
+make all         Run stages S1-S6, seed jobs, SimPy, MSRC, and aggregation
+make jobs        Run independent seed jobs
+make aggregate   Rebuild tables and reports from cached job outputs
+make s1 ... s7   Run individual experiment stages
+make final       Run the bounded final pass
+make clean       Remove generated JSON, CSV, and plot files
+```
+
+## Reproducing Results
+
+```powershell
+.\.venv\Scripts\python.exe run_credible.py
+.\.venv\Scripts\python.exe launch_jobs.py 5
+.\.venv\Scripts\python.exe run_simpy_jobs.py --seeds 3
+.\.venv\Scripts\python.exe run_msrc_jobs.py
+.\.venv\Scripts\python.exe aggregate_final.py
+.\.venv\Scripts\python.exe demo.py
+```
+
+The reproducibility inputs are [config/default.yaml](config/default.yaml) and the scenario/seed files under [results/jobs/](results/jobs/). Re-running a pipeline may change numerical values due to hardware performance or dependency behavior.
+
+## Limitations
+
+- LTT certificates assume calibration units are exchangeable; correlated extents within an epoch can weaken that guarantee.
+- Synthetic workloads do not reproduce every production storage-access pattern.
+- MSRC trace coverage is limited to the included volumes.
+- Device latencies, wear, bandwidth, interference, and SSD write-back behavior are modeled assumptions.
+- The online tracker is a heuristic adaptation mechanism rather than a replacement for periodic recalibration.
+- Aggregated FDR/FDP statistics must be interpreted with epoch-level correlations and finite-sample uncertainty.
+
+## License
+
+This project is licensed under the MIT License. See [LICENSE](LICENSE).
